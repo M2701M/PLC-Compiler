@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/Astat.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/flex/voc_flex.flex</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/cup/mycup.cup</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/Aexp.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/Args.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/program.inp</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/SymbolTable.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/FunctionStruct.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/TypeValue.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/Lstat.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/FunctionList.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/Type.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/Env.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/MainUI.java</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/build.xml</file>
+            <file>file:/C:/Users/Pramod/Downloads/Compiler_Tutorial/MyCompiler/REV2/voc_compiler/src/src/IDList.java</file>
+        </group>
+    </open-files>
+</project-private>

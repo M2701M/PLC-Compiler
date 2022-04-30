@@ -1,0 +1,404 @@
+/* --------------------------Usercode Section------------------------ */
+package src;   
+import java_cup.runtime.*;
+import java.util.*;
+   
+parser code {:
+    
+    public void report_error(String message, Object info)
+    {
+    StringBuffer m = new StringBuffer("Error");
+   
+    if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            if (s.left >= 0) {                
+                m.append(" in line "+(s.left+1));   
+                if (s.right >= 0)                    
+                    m.append(", column "+(s.right+1));
+            }
+        }
+   
+        m.append(" : "+message);
+        System.err.println(m);
+    }
+
+    public void sem_error(String context , String message)
+    {
+     	System.err.println("Semantic Error:"+ "<"+context+">" + message);
+        //System.exit(1);
+    }
+
+    public void type_error (String context,String message)
+    {
+        System.err.println("Type Error:"+ "<"+context+">" + message);
+        //System.exit(1);
+    }
+
+    public void report_fatal_error(String message, Object info)
+    {
+        report_error(message, info);
+       // System.exit(1);
+    }
+:};
+/* -------------------------------------------------------------------------------------------- */
+/* ---------------------------GRAMMAR SYMBOL DECLARATION--------------------------------------- */
+
+terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MOD, LPAREN, RPAREN, EQ, IF, ELSE, ENDIF, PRINT,
+                   WHILE,FOR, DO, UNTIL, BEGIN, END, INT, FLOAT, BOOL, STRING, OR ,LT, AND, GT,GTE,LTE, EQUAL, NOTEQUAL,VOID,RETURN;
+
+terminal Boolean   BOL;
+terminal Integer   INTEGER_LITERAL;
+terminal Float     FLOAT_LITERAL;
+terminal String    ID;
+terminal String    STRING_LITERAL;
+
+non terminal Object             program, function_list;
+non terminal Type               type;
+non terminal Astat              statement, assignment, ifthen, print, while,for, until_st, declaration, declaration_list;
+non terminal Astat              declarations ,functioncall, functiondecl, initialization, initialization_list;
+non terminal Lstat              statement_list;
+non terminal Aexp               expr, factor, term,logic;
+non terminal ArrayList<String> id_list;
+/* ---------------------------------------------------------------------------------------------- */                               
+
+/* ----------------------------GRAMMAR RULES----------------------------------------------------- */
+
+program        ::= declaration_list:dl statement_list:s
+                   {: s.execute();:}
+                  | 
+                   declaration_list:dl function_list:fl statement_list:s
+                   {: s.execute();
+                   :};
+
+function_list ::=  function_list:fl functiondecl:fd
+                  |
+                   functiondecl:fd;
+
+functiondecl ::= VOID ID:i LPAREN RPAREN BEGIN statement_list:s END
+                 {: 
+                     if(FunctionList.funTable.containsKey(i)) { parser.sem_error(i,"Duplicate function declaration");}
+                     else {
+                            FunctionList.funTable.put(i,s);
+                     }
+                  :}
+                 | 
+                  type:t ID:i LPAREN RPAREN BEGIN statement_list:s RETURN expr:rv SEMI END
+                  {: 
+                   if(FunctionList.funTable.containsKey(i)) { parser.sem_error(i,"Duplicate function declaration");}
+                   else {
+                            boolean b =false;
+
+                            if(rv.getType().isInteger() && t.isInteger()){
+                                b = true;
+                                 Env.envTable.put(i,new TypeValue(0));
+                            }else if(rv.getType().isFloating_point() && t.isFloating_point()){
+                                b = true;
+                                Env.envTable.put(i,new TypeValue(0.0f));
+                            }else if(rv.getType().isBool() && t.isBool()){
+                                b = true;
+                                Env.envTable.put(i,new TypeValue(false));
+                            }
+
+                            if(b){
+                                Astat st = Astat.assignment(i,rv);                                
+                                FunctionList.funTable.put(i,new Lstat(s,st));                                
+                            }else{
+                                parser.sem_error(i,"Function return type mismatch");
+                            }
+                        }
+                  :};
+
+declaration_list ::= declaration_list:dl declaration:d | declaration:d;
+
+/*initialization_list ::= initialization_list:il  initialization:i  | initialization:i;*/
+
+/*initialization ::= type:t ID:i EQ expr:e SEMI
+               {:                  
+                  if(Env.envTable.containsKey(i)) { parser.sem_error(i,"Duplicate declaration");}
+                  else
+                  {
+                        if (t.isInteger())
+                        {
+                            Env.envTable.put(i,new TypeValue(Integer.parseInt(e.getexp())));
+                        }
+                        if (t.isString())
+                        {                           
+                            Env.envTable.put(i,new TypeValue(e.getexp()));                             
+                        }
+                        if (t.isFloating_point())
+                        {                            
+                            Env.envTable.put(i,new TypeValue(Float.parseFloat(e.getexp())));
+                        }
+                        if (t.isBool())
+                        {
+                            Env.envTable.put(i,new TypeValue(Boolean. parseBoolean(e.getexp())));
+                        }             
+                        //System.out.println(e.getexp()); 
+                        //RESULT = Astat.assignment(t, i , e);
+                  }
+                 :};*/
+
+/*declarations ::= declarations:ds declaration:d | declaration:d;*/
+
+declaration ::= type:t id_list:il SEMI
+                {:  
+                    for(String i : il){
+                        if(Env.envTable.containsKey(i)) { parser.sem_error(i,"Duplicate declaration "+i);}
+                        else
+                        {
+                            if (t.isInteger())
+                            {
+                                Env.envTable.put(i,new TypeValue(0));
+                            }
+                            if (t.isString())
+                            {
+                                Env.envTable.put(i,new TypeValue(""));
+                            }
+                            if (t.isFloating_point())
+                            {
+                                Env.envTable.put(i,new TypeValue(0.0f));
+                            }
+                            if (t.isBool())
+                            {
+                                Env.envTable.put(i,new TypeValue(false));
+                            }
+
+                            RESULT = Astat.assignment(t, i);                         
+                        }
+                    }
+                    il.clear();
+                :};
+
+id_list ::=   id_list:il COMMA ID:i 
+                {:  
+                    il.add(i);
+                    RESULT = il;
+                :}
+              | 
+                ID:i
+                {:  
+                    IDList.list.add(i);
+                    RESULT = IDList.list;
+                :};
+
+
+
+statement_list ::=  statement_list:l statement:s
+                    {: RESULT = new Lstat(l,s) ; :}                 
+                   |  
+                    statement:s
+                    {: RESULT = new Lstat(s); :};
+
+statement    ::= assignment:s SEMI
+                {: RESULT = s;:}
+                | ifthen:s
+                {: RESULT = s; :}
+                | print:s SEMI
+                {: RESULT = s; :}
+                | while:s
+                {: RESULT = s; :}
+                | for:s
+                {: RESULT = s; :}
+                | BEGIN statement_list:s END 
+                {: RESULT = Astat.list(s); :}
+                |functioncall:s SEMI
+                {: RESULT = s; :};
+
+functioncall ::= ID:i LPAREN VOID RPAREN 
+                  {: RESULT = Astat.functioncall(i); :};
+
+/*
+System.out.println(e.getType().isBool());
+                    System.out.println(e.getType().isErrortype());
+                    System.out.println(e.getType().isFloating_point());
+                    System.out.println(e.getType().isInteger());
+                    System.out.println(e.getType().isString());
+*/
+while  ::= WHILE LPAREN expr:e RPAREN statement:s //while  ::= WHILE LPAREN expr:e RPAREN DO statement:s
+                {:if((Boolean)e.getType().isBool()){
+                        RESULT = Astat.whileloop(e,s); 
+                    }else{                       
+                        parser.type_error("e", " : expression in the while loop condition must be boolean.");
+                    }
+                 :};
+
+for  ::= FOR LPAREN ID:i EQ expr:e SEMI expr:e1 SEMI statement:s RPAREN statement:s1    //while  ::= WHILE LPAREN expr:e RPAREN DO statement:s
+                {:
+                      if (!Env.envTable.containsKey(i)) {parser.sem_error(i,"Variable undeclared");}
+                      else
+                      {                             
+                          if(Type.equals(Env.envTable.get(i).getType(),e.getType())){
+                               if((Boolean)e1.getType().isBool()){
+                                RESULT = Astat.forloop(i,e,e1,s,s1);
+                                
+                                }else{                       
+                        parser.type_error("e1", " : expression in the while loop condition must be boolean.");
+                    }
+                               
+                           }else{
+                               parser.type_error("e", " : expression in the assignment statement must have the type " + Env.envTable.get(i).getType().getTypeName());
+                           }
+                      }
+                 :};
+
+
+
+/*until_st  ::= DO statement:s  SEMI UNTIL LPAREN expr:e RPAREN SEMI
+                {: RESULT = Astat.until_st(e,s); :};*/
+
+print  ::= PRINT LPAREN expr:e RPAREN
+                {: RESULT = Astat.print(e); :};
+
+ifthen ::=  IF LPAREN expr:e RPAREN statement:s ENDIF
+            {:                  
+                if((Boolean)e.getType().isBool()){
+                    RESULT = Astat.ifthen(e,s); 
+                }else{                       
+                     parser.type_error("e", " : expression in the if condition must be boolean.");
+                }
+                
+            :}
+          | 
+            IF LPAREN expr:e RPAREN statement:s1 ELSE statement:s2 ENDIF
+            {:  
+                if((Boolean)e.getType().isBool()){
+                    RESULT = Astat.ifthenelse(e,s1,s2); 
+                }else{                       
+                     parser.type_error("e", " : expression in the if condition must be boolean.");
+                }
+             :};
+
+type ::= INT
+         {: RESULT = new Type().integer();:} /*assigns integer type to result */
+         |
+         FLOAT
+         {: RESULT = new Type().floating_point();:}
+         |
+         STRING
+         {: RESULT = new Type().string();:}
+         |
+         BOOL
+         {:RESULT = new Type().bool();:};
+
+/*assignment ::= type:t ID:i EQ expr:e
+               {:                  
+                  if(Env.envTable.containsKey(i)) { parser.sem_error(i,"Duplicate declaration");}
+                  else
+                  {
+                        if (t.isInteger())
+                        {
+                            Env.envTable.put(i,new TypeValue(0));
+                        }
+                        if (t.isString())
+                        {                           
+                            Env.envTable.put(i,new TypeValue(""));                             
+                        }
+                        if (t.isFloating_point())
+                        {                            
+                            Env.envTable.put(i,new TypeValue(0.0f));
+                        }
+                        if (t.isBool())
+                        {
+                            Env.envTable.put(i,new TypeValue(false));
+                        }             
+                         
+                        RESULT = Astat.assignment(t, i , e);
+                  }
+                 :};*/
+
+assignment ::= ID:i EQ expr:e
+                  {:
+                      if (!Env.envTable.containsKey(i)) {parser.sem_error(i,"Variable undeclared");}
+                      else
+                      { 
+                           if(Type.equals(Env.envTable.get(i).getType(),e.getType())){
+                               RESULT = Astat.assignment(i,e);
+                           }else{
+                               parser.type_error("e", " : expression in the assignment statement must have the type " + Env.envTable.get(i).getType().getTypeName());
+                           }
+                      }
+                    :}
+                |
+                 ID:i1 EQ ID:i2 LPAREN RPAREN
+                  {:                  
+                    if(Type.equals(Env.envTable.get(i1).getType(),Env.envTable.get(i2).getType())){
+                        RESULT = Astat.functionReturn(i1,i2); 
+                    }else{
+                        parser.type_error(i2, " : function return type must be " + Env.envTable.get(i1).getType().getTypeName());
+                    }                                       
+                  :};
+
+expr      ::=    expr:e PLUS factor:f
+                 {: 
+                    /*if(Type.equals(e.getType(), f.getType())&&(e.isFloat){*/
+                        RESULT = new Aexp(new Args(e,f), sym.PLUS);
+                    /*}else{
+                    }*/
+                  :}
+                 |
+                 expr:e MINUS factor:f
+                 {: RESULT = new Aexp(new Args(e,f), sym.MINUS); :}
+                 |
+                 factor:f
+                 {: RESULT = f; :}
+                 |
+                 logic:l
+                 {:RESULT = l; :}
+                 ;
+
+ factor    ::= factor:f TIMES term:t
+                 {: RESULT = new Aexp(new Args(f,t), sym.TIMES); :}
+                 |
+                 factor:f DIVIDE term:t
+                 {: RESULT = new Aexp(new Args(f,t), sym.DIVIDE); :}
+                 |
+                 factor:f MOD term:t
+                 {: RESULT = new Aexp(new Args(f,t), sym.MOD); :}
+                 |
+                 term:t
+                 {: RESULT = t; :}
+                 ;
+
+logic ::= term:t1 AND term:t2
+          {:RESULT = new Aexp(new Args(t1,t2), sym.AND);:}
+          |
+          term:t1 OR term:t2
+          {:RESULT = new Aexp(new Args(t1,t2), sym.OR);:}
+          |
+          term:t1 LT term:t2
+          {:RESULT = new Aexp(new Args(t1,t2), sym.LT);:}
+          |
+          term:t1 GT term:t2
+          {:RESULT = new Aexp(new Args(t1,t2), sym.GT);:}
+          |
+          term:t1 GTE term:t2
+          {:RESULT = new Aexp(new Args(t1,t2), sym.GTE);:}
+          |
+          term:t1 LTE term:t2
+          {:RESULT = new Aexp(new Args(t1,t2), sym.LTE);:}
+          |
+          term:t1 EQUAL term:t2
+          {:RESULT = new Aexp(new Args(t1,t2), sym.EQUAL);:}
+          |
+          term:t1 NOTEQUAL term:t2
+          {:RESULT = new Aexp(new Args(t1,t2), sym.NOTEQUAL);:}
+          ;
+
+ term      ::= LPAREN expr:e RPAREN
+                 {: RESULT = e; :}
+                 |
+                 INTEGER_LITERAL:n
+                 {: RESULT = new Aexp(n); :}
+                 |
+                 FLOAT_LITERAL:fl
+                 {: RESULT = new Aexp(fl); :}
+                 |
+                 STRING_LITERAL:sl
+                 {: RESULT  = new Aexp (sl, sl); :}
+                 |
+                 ID:i
+                 {: RESULT = new Aexp(i); :}
+                 |
+                 BOL:m
+                 {: RESULT = new Aexp(m); :};
