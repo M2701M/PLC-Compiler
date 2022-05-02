@@ -283,7 +283,7 @@ while  ::= WHILE LPAREN expr:e RPAREN statement:s //while  ::= WHILE LPAREN expr
 print  ::= PRINT LPAREN expr:e RPAREN
                 {: RESULT = Astat.print(e); :};
 
-ifthen ::=  IF LPAREN expr:e RPAREN BEGIN statement:s END
+ifthen ::=  IF LPAREN expr:e RPAREN statement:s ENDIF
             {:                  
                 if((Boolean)e.getType().isBool()){
                     RESULT = Astat.ifthen(e,s); 
@@ -293,7 +293,7 @@ ifthen ::=  IF LPAREN expr:e RPAREN BEGIN statement:s END
                 
             :}
           | 
-            IF LPAREN expr:e RPAREN BEGIN statement:s1 END ELSE BEGIN statement:s2 END
+            IF LPAREN expr:e RPAREN statement:s1 ELSE statement:s2 ENDIF
             {:  
                 if((Boolean)e.getType().isBool()){
                     RESULT = Astat.ifthenelse(e,s1,s2); 
