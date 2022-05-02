@@ -117,7 +117,6 @@ boolean = true|false
     "-"                { return symbol(sym.MINUS); }
     "*"                { return symbol(sym.TIMES); }
     "/"                { return symbol(sym.DIVIDE); }
-    "%"                { return symbol(sym.MOD); }
 
     "("                { return symbol(sym.LPAREN); }
     ")"                { return symbol(sym.RPAREN); }
@@ -127,7 +126,6 @@ boolean = true|false
     "endif"            {return symbol(sym.ENDIF);}
     "print"            { return symbol(sym.PRINT); }
     "while"            { return symbol(sym.WHILE); }
-    "for"              { return symbol(sym.FOR); }
     "do"               { return symbol(sym.DO); }
     "until"            { return symbol(sym.UNTIL); }
     "{"                { return symbol(sym.BEGIN); }
@@ -150,7 +148,7 @@ boolean = true|false
     "void"             { return symbol  (sym.VOID);}
     "return"           { return symbol  (sym.RETURN);}
     "func"             { return symbol  (sym.FUNC);}
-    ":"             { return symbol  (sym.COLON);}
+    ":"                { return symbol  (sym.COLON);}
 
 
     {int}             {return symbol(sym.INTEGER_LITERAL, new Integer(yytext()));}

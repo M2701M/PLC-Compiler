@@ -44,8 +44,8 @@ parser code {:
 /* -------------------------------------------------------------------------------------------- */
 /* ---------------------------GRAMMAR SYMBOL DECLARATION--------------------------------------- */
 
-terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, MOD, LPAREN, RPAREN, EQ, IF, ELSE, ENDIF, PRINT,
-                   WHILE,FOR, DO, UNTIL, BEGIN, END, INT, FLOAT, BOOL, STRING, OR ,LT, AND, GT,GTE,LTE, EQUAL, NOTEQUAL,VOID,RETURN, FUNC, COLON;
+terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN, EQ, IF, ELSE, ENDIF, PRINT,
+                   WHILE, DO, UNTIL, BEGIN, END, INT, FLOAT, BOOL, STRING, OR ,LT, AND, GT,GTE,LTE, EQUAL, NOTEQUAL,VOID,RETURN, FUNC, COLON;
 
 terminal Boolean   BOL;
 terminal Integer   INTEGER_LITERAL;
@@ -118,34 +118,6 @@ functiondecl ::= FUNC ID:i LPAREN RPAREN COLON VOID BEGIN statement_list:s END
 declaration_list ::= declaration_list:dl declaration:d | declaration:d ;
 
 initialization_list ::= initialization_list:il  initialization:i  | initialization:i;
-
-// initialization ::= type:t ID:i EQ expr:e SEMI
-//                {:                  
-//                   if(Env.envTable.containsKey(i)) { parser.sem_error(i,"Duplicate declaration");}
-//                   else
-//                   {
-//                         if (t.isInteger())
-//                         {
-//                             Env.envTable.put(i,new TypeValue(Integer.parseInt(e.getexp())));
-//                         }
-//                         if (t.isString())
-//                         {                           
-//                             Env.envTable.put(i,new TypeValue(e.getexp()));                             
-//                         }
-//                         if (t.isFloating_point())
-//                         {                            
-//                             Env.envTable.put(i,new TypeValue(Float.parseFloat(e.getexp())));
-//                         }
-//                         if (t.isBool())
-//                         {
-//                             Env.envTable.put(i,new TypeValue(Boolean. parseBoolean(e.getexp())));
-//                         }             
-//                         //System.out.println(e.getexp()); 
-//                         //RESULT = Astat.assignment(t, i , e);
-//                   }
-//                  :};
-
-/*declarations ::= declarations:ds declaration:d | declaration:d;*/
 
 declaration ::= type:t ID:i EQ expr:e SEMI
                 {:  
@@ -241,13 +213,6 @@ statement    ::= assignment:s SEMI
 functioncall ::= ID:i LPAREN RPAREN 
                   {: RESULT = Astat.functioncall(i); :};
 
-/*
-System.out.println(e.getType().isBool());
-                    System.out.println(e.getType().isErrortype());
-                    System.out.println(e.getType().isFloating_point());
-                    System.out.println(e.getType().isInteger());
-                    System.out.println(e.getType().isString());
-*/
 while  ::= WHILE LPAREN expr:e RPAREN statement:s //while  ::= WHILE LPAREN expr:e RPAREN DO statement:s
                 {:if((Boolean)e.getType().isBool()){
                         RESULT = Astat.whileloop(e,s); 
@@ -255,27 +220,6 @@ while  ::= WHILE LPAREN expr:e RPAREN statement:s //while  ::= WHILE LPAREN expr
                         parser.type_error("e", " : expression in the while loop condition must be boolean.");
                     }
                  :};
-
-// for  ::= FOR LPAREN ID:i EQ expr:e SEMI expr:e1 SEMI statement:s RPAREN statement:s1    //while  ::= WHILE LPAREN expr:e RPAREN DO statement:s
-//                 {:
-//                       if (!Env.envTable.containsKey(i)) {parser.sem_error(i,"Variable undeclared");}
-//                       else
-//                       {                             
-//                           if(Type.equals(Env.envTable.get(i).getType(),e.getType())){
-//                                if((Boolean)e1.getType().isBool()){
-//                                 RESULT = Astat.forloop(i,e,e1,s,s1);
-                                
-//                                 }else{                       
-//                         parser.type_error("e1", " : expression in the while loop condition must be boolean.");
-//                     }
-                               
-//                            }else{
-//                                parser.type_error("e", " : expression in the assignment statement must have the type " + Env.envTable.get(i).getType().getTypeName());
-//                            }
-//                       }
-//                  :};
-
-
 
 /*until_st  ::= DO statement:s  SEMI UNTIL LPAREN expr:e RPAREN SEMI
                 {: RESULT = Astat.until_st(e,s); :};*/
@@ -314,32 +258,6 @@ type ::= INT
          BOOL
          {:RESULT = new Type().bool();:};
 
-/*assignment ::= type:t ID:i EQ expr:e
-               {:                  
-                  if(Env.envTable.containsKey(i)) { parser.sem_error(i,"Duplicate declaration");}
-                  else
-                  {
-                        if (t.isInteger())
-                        {
-                            Env.envTable.put(i,new TypeValue(0));
-                        }
-                        if (t.isString())
-                        {                           
-                            Env.envTable.put(i,new TypeValue(""));                             
-                        }
-                        if (t.isFloating_point())
-                        {                            
-                            Env.envTable.put(i,new TypeValue(0.0f));
-                        }
-                        if (t.isBool())
-                        {
-                            Env.envTable.put(i,new TypeValue(false));
-                        }             
-                         
-                        RESULT = Astat.assignment(t, i , e);
-                  }
-                 :};*/
-
 assignment ::= ID:i EQ expr:e
                   {:
                       if (!Env.envTable.containsKey(i)) {parser.sem_error(i,"Variable undeclared");}
@@ -362,40 +280,9 @@ assignment ::= ID:i EQ expr:e
                     }                                       
                   :};
 
-// initialization ::= type:t ID:i EQ expr:e SEMI
-//                 {:  
-//                         if(Env.envTable.containsKey(i)) { parser.sem_error(i,"Duplicate declaration "+i);}
-//                         else
-//                         {
-//                             if (t.isInteger())
-//                             {
-//                                 Env.envTable.put(i,new TypeValue(Integer.parseInt(e.getexp())));
-//                             }
-//                             if (t.isString())
-//                             {                           
-//                                 Env.envTable.put(i,new TypeValue(e.getexp()));                             
-//                             }
-//                             if (t.isFloating_point())
-//                             {                            
-//                                 Env.envTable.put(i,new TypeValue(Float.parseFloat(e.getexp())));
-//                             }
-//                             if (t.isBool())
-//                             {
-//                                 Env.envTable.put(i,new TypeValue(Boolean. parseBoolean(e.getexp())));
-//                             }        
-                                
-//                             RESULT = Astat.assignment(t, i, e);                         
-//                         }
-                    
-//                 :};
-
-
 expr      ::=    expr:e PLUS factor:f
                  {: 
-                    /*if(Type.equals(e.getType(), f.getType())&&(e.isFloat){*/
                         RESULT = new Aexp(new Args(e,f), sym.PLUS);
-                    /*}else{
-                    }*/
                   :}
                  |
                  expr:e MINUS factor:f
@@ -413,9 +300,6 @@ expr      ::=    expr:e PLUS factor:f
                  |
                  factor:f DIVIDE term:t
                  {: RESULT = new Aexp(new Args(f,t), sym.DIVIDE); :}
-                 |
-                 factor:f MOD term:t
-                 {: RESULT = new Aexp(new Args(f,t), sym.MOD); :}
                  |
                  term:t
                  {: RESULT = t; :}
