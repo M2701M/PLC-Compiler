@@ -133,7 +133,7 @@ public class Aexp
         }
        
         //set type here
-        if (op == sym.PLUS || op == sym.MINUS || op == sym.TIMES || op == sym.DIVIDE || op == sym.MOD)
+        if (op == sym.PLUS || op == sym.MINUS || op == sym.TIMES || op == sym.DIVIDE)
         {
             
              if (x.getse().getType().isFloating_point()){
@@ -216,10 +216,6 @@ public class Aexp
             if (Operator == sym.DIVIDE)
             {
                 s = "DIVIDE(" + Operands.getfi().getexp() + "," + Operands.getse().getexp() + ")";
-            }
-            if (Operator == sym.MOD)
-            {
-                s = "MOD(" + Operands.getfi().getexp() + "," + Operands.getse().getexp() + ")";
             }
         } else if (tag[5])
         {
@@ -317,21 +313,6 @@ public class Aexp
                     {
                         float val = (Float) Operands.getfi().getTypeValue().getValue();
                         val = val / (Float)Operands.getse().getTypeValue().getValue();
-                        typeVal = new TypeValue(val);
-                    }
-                }
-                else if (Operator == sym.MOD)
-                {                    
-                    if ( Operands.getfi().getType().isInteger() )
-                    {
-                        int val = (Integer) Operands.getfi().getTypeValue().getValue();
-                        val = val % (Integer)Operands.getse().getTypeValue().getValue();
-                        typeVal = new TypeValue(val);
-                        
-                    } else if ( Operands.getfi().getType().isFloating_point())
-                    {
-                        float val = (Float) Operands.getfi().getTypeValue().getValue();
-                        val = val % (Float)Operands.getse().getTypeValue().getValue();
                         typeVal = new TypeValue(val);
                     }
                 }
