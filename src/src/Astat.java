@@ -114,7 +114,7 @@ public class Astat
     public static Astat assignment(Type t, String ID, Aexp e)
     {
         Astat assignment = new Astat(t, ID, e);
-        assignment.statementType = "instantiation";
+        assignment.statementType = "initialization";
 
         return assignment;
 
@@ -213,7 +213,7 @@ public class Astat
 
         if (statementType.equals("assignment")) {
             return ID + "=" + e.getexp();
-        } else if (statementType.equals("intantiation")) {
+        } else if (statementType.equals("initialization")) {
             return type.getCode() + " " + ID + "=" + e.getexp();
         } else if (statementType.equals("ifthen")) {
             return "if " + e.getexp() + " " + body.getstat();
@@ -258,7 +258,7 @@ public class Astat
             if (Env.envTable.get(ID).getType().isBool()) {
                 Env.envTable.put(ID, new TypeValue((Boolean) e.getTypeValue().getValue()));
             }
-        } else if (statementType.equals("instantiation")) {
+        } else if (statementType.equals("initialization")) {
 
 
             if (type.isInteger()) {

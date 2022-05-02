@@ -149,6 +149,8 @@ boolean = true|false
     "!="               { return symbol (sym.NOTEQUAL);}
     "void"             { return symbol  (sym.VOID);}
     "return"           { return symbol  (sym.RETURN);}
+    "func"             { return symbol  (sym.FUNC);}
+    ":"             { return symbol  (sym.COLON);}
 
 
     {int}             {return symbol(sym.INTEGER_LITERAL, new Integer(yytext()));}
