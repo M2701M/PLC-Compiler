@@ -55,11 +55,11 @@ terminal String    STRING_LITERAL;
 
 non terminal Object             program, function_list, program_list;
 non terminal Type               type;
-non terminal Astat              statement, assignment, ifthen, print, while,for, until_st, declaration, declaration_list;
+non terminal Astat              param, statement, assignment, ifthen, print, while,for, until_st, declaration, declaration_list;
 non terminal Astat              declarations ,functioncall, functiondecl, initialization, initialization_list;
-non terminal Lstat              statement_list;
+non terminal Lstat              param_list, statement_list;
 non terminal Aexp               expr, factor, term,logic;
-non terminal ArrayList<String> id_list;
+non terminal ArrayList<String>  id_list;
 /* ---------------------------------------------------------------------------------------------- */                               
 
 /* ----------------------------GRAMMAR RULES----------------------------------------------------- */
@@ -113,7 +113,66 @@ functiondecl ::= FUNC ID:i LPAREN RPAREN COLON VOID BEGIN statement_list:s END
                                 parser.sem_error(i,"Function return type mismatch");
                             }
                         }
+                  :}
+                |
+                FUNC ID:i LPAREN param_list:pl RPAREN COLON VOID BEGIN statement_list:s END
+                 {: 
+                     if(FunctionList.funTable.containsKey(i)) { parser.sem_error(i,"Duplicate function declaration");}
+                     else {
+                            FunctionList.funTable.put(i,s);
+                            for (Astat p : pl.statementLists) {
+                                if (p.type.isInteger())
+                                {
+                                    Env.envTable.put(p.ID,new TypeValue(0));
+                                }
+                                if (p.type.isString())
+                                {
+                                    Env.envTable.put(p.ID,new TypeValue(""));
+                                }
+                                if (p.type.isFloating_point())
+                                {
+                                    Env.envTable.put(p.ID,new TypeValue(0.0f));
+                                }
+                                if (p.type.isBool())
+                                {
+                                    Env.envTable.put(p.ID,new TypeValue(false));
+                                }
+                            }
+                        System.out.println(Env.envTable.toString());
+                     }
+                  :}
+                 | 
+                  FUNC ID:i LPAREN param_list:pl RPAREN COLON type:t BEGIN statement_list:s RETURN expr:rv SEMI END
+                  {: 
+                   if(FunctionList.funTable.containsKey(i)) { parser.sem_error(i,"Duplicate function declaration");}
+                   else {
+                            boolean b =false;
+
+                            if(rv.getType().isInteger() && t.isInteger()){
+                                b = true;
+                                 Env.envTable.put(i,new TypeValue(0));
+                            }else if(rv.getType().isFloating_point() && t.isFloating_point()){
+                                b = true;
+                                Env.envTable.put(i,new TypeValue(0.0f));
+                            }else if(rv.getType().isBool() && t.isBool()){
+                                b = true;
+                                Env.envTable.put(i,new TypeValue(false));
+                            }
+
+                            if(b){
+                                Astat st = Astat.assignment(i,rv);                                
+                                FunctionList.funTable.put(i,new Lstat(s,st));                                
+                            }else{
+                                parser.sem_error(i,"Function return type mismatch");
+                            }
+                        }
                   :};
+
+param_list ::= param_list:pl COMMA param:p {: RESULT = new Lstat(pl, p); :}
+                | param:p {: RESULT = new Lstat(p); :};
+
+param ::= type:t ID:i {: RESULT = new Astat(t,i); :};
+
 
 declaration_list ::= declaration_list:dl declaration:d | declaration:d ;
 

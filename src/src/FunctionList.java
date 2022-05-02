@@ -9,6 +9,6 @@ import java.util.Hashtable;
 public class FunctionList 
 {
  //Environment table
-  public static Hashtable<String,Lstat> funTable = new Hashtable<String, Lstat>();
+  public static Hashtable<String,Lstat> funTable = new Hashtable<>();
   
 }
