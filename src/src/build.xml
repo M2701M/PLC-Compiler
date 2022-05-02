@@ -62,7 +62,7 @@
 
 
     <target name="jflex" depends="cup">
-        <jflex file="${flex}/voc_flex.flex" destdir="${java}" />
+        <jflex file="${flex}/compiler.flex" destdir="${java}" />
     </target>
   
   
