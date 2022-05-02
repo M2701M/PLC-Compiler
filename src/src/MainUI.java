@@ -15,9 +15,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import javax.swing.*;
 
-/**
- * @author Pramod
- */
+
+
 public class MainUI extends javax.swing.JFrame {
 
     /**

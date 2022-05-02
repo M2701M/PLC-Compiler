@@ -236,9 +236,6 @@ public class Astat
         } else {
             return "unknown";
         }
-
-
-
     }
 
     public void execute() {
