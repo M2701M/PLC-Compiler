@@ -45,7 +45,7 @@ parser code {:
 /* ---------------------------GRAMMAR SYMBOL DECLARATION--------------------------------------- */
 
 terminal           SEMI, COMMA, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN, EQ, IF, ELSE, ENDIF, PRINT,
-                   WHILE, DO, UNTIL, BEGIN, END, INT, FLOAT, BOOL, STRING, OR ,LT, AND, GT,GTE,LTE, EQUAL, NOTEQUAL,VOID,RETURN, FUNC, COLON;
+                   WHILE, BEGIN, END, INT, FLOAT, BOOL, STRING, OR ,LT, AND, GT,GTE,LTE, EQUAL, NOTEQUAL,VOID,RETURN, FUNC, COLON;
 
 terminal Boolean   BOL;
 terminal Integer   INTEGER_LITERAL;
@@ -55,8 +55,8 @@ terminal String    STRING_LITERAL;
 
 non terminal Object             program, function_list, program_list;
 non terminal Type               type;
-non terminal Astat              statement, assignment, ifthen, print, while,for, until_st, declaration, declaration_list;
-non terminal Astat              declarations ,functioncall, functiondecl, initialization, initialization_list;
+non terminal Astat              statement, assignment, ifthen, print, while,for, declaration, declaration_list;
+non terminal Astat              functioncall, functiondecl, initialization, initialization_list;
 non terminal Lstat              statement_list;
 non terminal Aexp               expr, factor, term,logic;
 non terminal ArrayList<String> id_list;
@@ -220,9 +220,6 @@ while  ::= WHILE LPAREN expr:e RPAREN statement:s //while  ::= WHILE LPAREN expr
                         parser.type_error("e", " : expression in the while loop condition must be boolean.");
                     }
                  :};
-
-/*until_st  ::= DO statement:s  SEMI UNTIL LPAREN expr:e RPAREN SEMI
-                {: RESULT = Astat.until_st(e,s); :};*/
 
 print  ::= PRINT LPAREN expr:e RPAREN
                 {: RESULT = Astat.print(e); :};

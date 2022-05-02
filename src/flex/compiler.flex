@@ -126,8 +126,6 @@ boolean = true|false
     "endif"            {return symbol(sym.ENDIF);}
     "print"            { return symbol(sym.PRINT); }
     "while"            { return symbol(sym.WHILE); }
-    "do"               { return symbol(sym.DO); }
-    "until"            { return symbol(sym.UNTIL); }
     "{"                { return symbol(sym.BEGIN); }
     "}"                { return symbol(sym.END); }
     "boolean"          { return symbol (sym.BOOL);}
