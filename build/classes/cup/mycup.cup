@@ -59,7 +59,7 @@ terminal String    STRING_LITERAL;
 
 non terminal Object             program, function_list, program_list;
 non terminal Type               type;
-non terminal Statement              statement, assignment, ifthen, print, while, declaration, declaration_list;
+non terminal Statement              statement, assignment, ifthen, print, while, declaration, declaration_list, param;
 non terminal Statement              functioncall, functiondecl;
 non terminal Lstatements              param_list, statement_list, assignment_list;
 non terminal Expression               expr, factor, term,logic;
