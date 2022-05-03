@@ -59,8 +59,8 @@ terminal String    STRING_LITERAL;
 
 non terminal Object             program, function_list, program_list;
 non terminal Type               type;
-non terminal Statement              param, statement, assignment, ifthen, print, while,for, declaration, declaration_list;
-non terminal Statement              functioncall, functiondecl, initialization, initialization_list;
+non terminal Statement              statement, assignment, ifthen, print, while, declaration, declaration_list;
+non terminal Statement              functioncall, functiondecl;
 non terminal Lstatements              param_list, statement_list, assignment_list;
 non terminal Expression               expr, factor, term,logic;
 non terminal ArrayList<String>  id_list;
@@ -181,8 +181,6 @@ param ::= type:t ID:i {: RESULT = new Statement(t,i); :};
 
 declaration_list ::= declaration_list:dl declaration:d | declaration:d ;
 
-initialization_list ::= initialization_list:il  initialization:i  | initialization:i;
-
 declaration ::= type:t ID:i EQ expr:e SEMI
                 {:  
                         if(Tables.envTable.containsKey(i)) { parser.sem_error(i,"Duplicate declaration "+i);}
@@ -266,8 +264,6 @@ statement    ::= assignment:s SEMI
                 | print:s SEMI
                 {: RESULT = s; :}
                 | while:s
-                {: RESULT = s; :}
-                | for:s
                 {: RESULT = s; :}
                 | BEGIN statement_list:s END
                 {: RESULT = Statement.list(s); :}
