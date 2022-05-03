@@ -4,69 +4,70 @@ package src;
 // with getInstance() method 
  
 
-public class Astat
+public class Statement
 {
     parser parser = new parser();
     String statementType;
     String ID;
     Type type;
-    Aexp e;
-    Aexp e1;
-    Astat body;
-    Astat expbody;
-    Astat elsebody;
-    Lstat statementList;
+    Expression e;
+    Expression e1;
+    Statement body;
+    Statement expbody;
+    Statement elsebody;
+    Lstatements statementList;
     int calculatorResult;
     float calculatorFloatResult;
     String ID2;
 
     //for logical
-    Aexp left,right;    
+    Expression left;    
+    Expression right;
     
 
-    public Astat(Type t, String ID, Aexp e)
+    public Statement(Type t, String ID, Expression e)
     {
         this.ID = ID;
         this.e = e;
         this.type = t;
     }
     
-    public Astat(Type t, String ID)
+    public Statement(Type t, String ID)
     {
         this.ID = ID;
         this.e = null;
         this.type = t;
     }
 
-    public Astat (Integer i)
+    public Statement (Integer i)
     {
         this.calculatorResult = i;
     }
-     public Astat (Float i)
+     public Statement (Float i)
     {
         this.calculatorFloatResult = i;
     }
      
     
-    public Astat(String ID, Aexp e)
+    public Statement(String ID, Expression e)
     {
         this.ID = ID;
         this.e = e;
     }
     
-    public Astat(String ID1,String ID2 )
+    public Statement(String ID1,String ID2 )
     {
         this.ID = ID1;
         this.ID2 = ID2;
     }
 
-    public Astat(Aexp e, Astat body)
+    public Statement(Expression e, Statement body)
     {
         this.e = e;
         this.body = body;
     }
     
-    public Astat(Aexp e, Astat body1, Astat body2) {
+    public Statement(Expression e, Statement body1, Statement body2) {
         this.e = e;
 
         this.body = body1;
@@ -74,7 +75,7 @@ public class Astat
 
     }
     
-    public Astat(String ID, Aexp e, Aexp e1, Astat expbody,Astat body) {   //for loop
+    public Statement(String ID, Expression e, Expression e1, Statement expbody,Statement body) {   //for loop
         this.ID = ID;
         this.e = e;
         this.e1 = e1;
@@ -82,28 +83,28 @@ public class Astat
         this.body = body;          
     }
 
-    public Astat(Aexp e)
+    public Statement(Expression e)
     {
         this.e = e;
     }
 
-    private Astat(Lstat l)
+    private Statement(Lstatements l)
     {
         statementList = l;
     }
 
     
-    public static Astat logic (Aexp logical)
+    public static Statement logic (Expression logical)
     {
-        Astat logic = new Astat(logical);
+        Statement logic = new Statement(logical);
         logic.statementType="logic";
 
         return logic;
     }
     
-    public static Astat assignment(String ID, Aexp e)
+    public static Statement assignment(String ID, Expression e)
     {
-        Astat assignment = new Astat(ID, e);
+        Statement assignment = new Statement(ID, e);
 
         assignment.statementType = "assignment";
 
@@ -111,98 +112,98 @@ public class Astat
 
     }
 
-    public static Astat assignment(Type t, String ID, Aexp e)
+    public static Statement assignment(Type t, String ID, Expression e)
     {
-        Astat assignment = new Astat(t, ID, e);
+        Statement assignment = new Statement(t, ID, e);
         assignment.statementType = "initialization";
 
         return assignment;
 
     }
     
-    public static Astat assignment(Type t, String ID)
+    public static Statement assignment(Type t, String ID)
     {
-        Astat assignment = new Astat(t, ID);
+        Statement assignment = new Statement(t, ID);
         assignment.statementType = "declaration";
 
         return assignment;
 
     }
 
-    public static Astat whileloop(Aexp e, Astat whileBody)
+    public static Statement whileloop(Expression e, Statement whileBody)
     {
-        Astat loop = new Astat(e, whileBody);
+        Statement loop = new Statement(e, whileBody);
         loop.statementType = "whileloop";
         return loop;
 
     }
     
-    public static Astat until_st(Aexp e, Astat untilBody)
+    public static Statement until_st(Expression e, Statement untilBody)
     {
-        Astat loop = new Astat(e, untilBody);
+        Statement loop = new Statement(e, untilBody);
         loop.statementType = "until_st";
         return loop;
 
     }
 
-    public static Astat ifthen(Aexp e, Astat ifbody)
+    public static Statement ifthen(Expression e, Statement ifbody)
     {
-        Astat ifthen = new Astat(e, ifbody);
+        Statement ifthen = new Statement(e, ifbody);
         ifthen.statementType = "ifthen";
         return ifthen;
     }
     
-    public static Astat ifthenelse(Aexp e, Astat ifbody, Astat elsebody) {
+    public static Statement ifthenelse(Expression e, Statement ifbody, Statement elsebody) {
 
-        Astat ifthenelse = new Astat(e, ifbody,elsebody);
+        Statement ifthenelse = new Statement(e, ifbody,elsebody);
         ifthenelse.statementType = "ifthenelse";
         return ifthenelse;
         
     }
     
-    public static Astat forloop(String ID, Aexp e, Aexp e1, Astat expbody,Astat forbody) {
+    public static Statement forloop(String ID, Expression e, Expression e1, Statement expbody,Statement forbody) {
 
-        Astat forloop = new Astat(ID, e, e1,expbody,forbody);
+        Statement forloop = new Statement(ID, e, e1,expbody,forbody);
         forloop.statementType = "forloop";
         return forloop;
         
     }
 
-    public static Astat print(Aexp e)
+    public static Statement print(Expression e)
     {
 
-        Astat p = new Astat(e);
+        Statement p = new Statement(e);
         p.statementType = "print";
         return p;
 
     }
 
-    public static Astat list(Lstat l)
+    public static Statement list(Lstatements l)
     {
 
-        Astat p = new Astat(l);
+        Statement p = new Statement(l);
         p.statementType = "list";
         return p;
 
     }
     
-    public static Astat functioncall(String id)
+    public static Statement functioncall(String id)
     {
-        Lstat l;
-        Astat p = null;
-        l = FunctionList.funTable.get(id);
+        Lstatements l;
+        Statement p = null;
+        l = Tables.funcTable.get(id);
         if(l != null){
-           p = new Astat(l); 
+           p = new Statement(l); 
            p.statementType = "function";
         }
         return p;
 
     }
     
-    public static Astat functionReturn(String id1, String id2)
+    public static Statement functionReturn(String id1, String id2)
     {
        
-       Astat p = new Astat(id1,id2);
+       Statement p = new Statement(id1,id2);
        p.statementType = "function-return";
        
        return p;
@@ -243,36 +244,36 @@ public class Astat
          * Retreive identifier from table, check its type, then assign
          */
         if (statementType.equals("assignment")) {
-            if (Env.envTable.get(ID).getType().isInteger()) {
-                Env.envTable.put(ID, new TypeValue((Integer) e.getTypeValue().getValue()));
+            if (Tables.envTable.get(ID).getType().isInteger()) {
+                Tables.envTable.put(ID, new TypeValue((Integer) e.getTypeValue().getValue()));
             }
-            if (Env.envTable.get(ID).getType().isString()) {
-                Env.envTable.put(ID, new TypeValue((String) e.getTypeValue().getValue()));
+            if (Tables.envTable.get(ID).getType().isString()) {
+                Tables.envTable.put(ID, new TypeValue((String) e.getTypeValue().getValue()));
             }
-            if (Env.envTable.get(ID).getType().isFloating_point()) {
-                Env.envTable.put(ID, new TypeValue((Float) e.getTypeValue().getValue()));
+            if (Tables.envTable.get(ID).getType().isFloating_point()) {
+                Tables.envTable.put(ID, new TypeValue((Float) e.getTypeValue().getValue()));
             }
-            if (Env.envTable.get(ID).getType().isBool()) {
-                Env.envTable.put(ID, new TypeValue((Boolean) e.getTypeValue().getValue()));
+            if (Tables.envTable.get(ID).getType().isBool()) {
+                Tables.envTable.put(ID, new TypeValue((Boolean) e.getTypeValue().getValue()));
             }
         } else if (statementType.equals("initialization")) {
 
 
             if (type.isInteger()) {
-                Env.envTable.put(ID, new TypeValue((Integer) e.getTypeValue().getValue()));
+                Tables.envTable.put(ID, new TypeValue((Integer) e.getTypeValue().getValue()));
             }
 
             if (type.isFloating_point()) {
-                Env.envTable.put(ID, new TypeValue((Float) e.getTypeValue().getValue()));
+                Tables.envTable.put(ID, new TypeValue((Float) e.getTypeValue().getValue()));
             }
             if (type.isString()) {
 
-                Env.envTable.put(ID, new TypeValue((String) e.getTypeValue().getValue()));
+                Tables.envTable.put(ID, new TypeValue((String) e.getTypeValue().getValue()));
 
 
             }
             if (type.isBool()) {
-                Env.envTable.put(ID, new TypeValue((Boolean) e.getTypeValue().getValue()));
+                Tables.envTable.put(ID, new TypeValue((Boolean) e.getTypeValue().getValue()));
             }
 
         } else if (statementType.equals("ifthen")) {
@@ -311,17 +312,17 @@ public class Astat
             }
             
         }else if (statementType.equals("forloop")) {
-            if (Env.envTable.get(ID).getType().isInteger()) {
-                Env.envTable.put(ID, new TypeValue((Integer) e.getTypeValue().getValue()));
+            if (Tables.envTable.get(ID).getType().isInteger()) {
+                Tables.envTable.put(ID, new TypeValue((Integer) e.getTypeValue().getValue()));
             }
-            if (Env.envTable.get(ID).getType().isString()) {
-                Env.envTable.put(ID, new TypeValue((String) e.getTypeValue().getValue()));
+            if (Tables.envTable.get(ID).getType().isString()) {
+                Tables.envTable.put(ID, new TypeValue((String) e.getTypeValue().getValue()));
             }
-            if (Env.envTable.get(ID).getType().isFloating_point()) {
-                Env.envTable.put(ID, new TypeValue((Float) e.getTypeValue().getValue()));
+            if (Tables.envTable.get(ID).getType().isFloating_point()) {
+                Tables.envTable.put(ID, new TypeValue((Float) e.getTypeValue().getValue()));
             }
-            if (Env.envTable.get(ID).getType().isBool()) {
-                Env.envTable.put(ID, new TypeValue((Boolean) e.getTypeValue().getValue()));
+            if (Tables.envTable.get(ID).getType().isBool()) {
+                Tables.envTable.put(ID, new TypeValue((Boolean) e.getTypeValue().getValue()));
             }
             
             if (e1.getTypeValue().getType().isBool()) {
@@ -368,7 +369,7 @@ public class Astat
             }
 
         } else if (statementType.equals("list")) {
-            for (Astat s : statementList.statementLists) {
+            for (Statement s : statementList.statementLists) {
                 s.execute();
             }
         } else if (statementType.equals("calculator")) {
@@ -380,20 +381,20 @@ public class Astat
             }
 
         } else if (statementType.equals("function")) {
-            for (Astat s : statementList.statementLists) {
+            for (Statement s : statementList.statementLists) {
                 s.execute();
             }
         } else if (statementType.equals("function-return")) {
 
-            Lstat l;
-            Astat p = null;
-            l = FunctionList.funTable.get(ID2);
+            Lstatements l;
+            Statement p = null;
+            l = Tables.funcTable.get(ID2);
             if (l != null) {
-                for (Astat s : l.statementLists) {
+                for (Statement s : l.statementLists) {
                     s.execute();
                 }
 
-                Env.envTable.put(ID, Env.envTable.get(ID2));
+                Tables.envTable.put(ID, Tables.envTable.get(ID2));
             }
         } 
     }

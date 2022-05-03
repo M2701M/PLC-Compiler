@@ -3,24 +3,24 @@ package src;
 import java.util.ArrayList;
 
 
-public class Lstat {
+public class Lstatements {
 
-    ArrayList<Astat> statementLists;
+    ArrayList<Statement> statementLists;
 
-    public Lstat(Astat s){
-        statementLists  = new ArrayList<Astat>();
+    public Lstatements(Statement s){
+        statementLists  = new ArrayList<Statement>();
         statementLists.add(s);
     }
 
-    public Lstat(Lstat l, Astat s){
+    public Lstatements(Lstatements l, Statement s){
         statementLists = l.statementLists;
         statementLists.add(s);
     }
 
     public void execute(){
 
-        for (Astat astat : statementLists) {
-            astat.execute();
+        for (Statement Statement : statementLists) {
+            Statement.execute();
         }
     }
 
