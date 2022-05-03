@@ -61,7 +61,7 @@ non terminal Object             program, function_list, program_list;
 non terminal Type               type;
 non terminal Statement              param, statement, assignment, ifthen, print, while,for, declaration, declaration_list;
 non terminal Statement              functioncall, functiondecl, initialization, initialization_list;
-non terminal Lstatements              param_list, statement_list;
+non terminal Lstatements              param_list, statement_list, assignment_list;
 non terminal Expression               expr, factor, term,logic;
 non terminal ArrayList<String>  id_list;
 /* ---------------------------------------------------------------------------------------------- */                               
@@ -141,8 +141,9 @@ functiondecl ::= FUNC ID:i LPAREN RPAREN COLON VOID BEGIN statement_list:s END
                                 {
                                     Tables.envTable.put(p.ID,new TypeValue(false));
                                 }
+                               
                             }
-                        System.out.println(Tables.envTable.toString());
+                        
                      }
                   :}
                  | 
@@ -274,7 +275,28 @@ statement    ::= assignment:s SEMI
                 {: RESULT = s; :};
 
 functioncall ::= ID:i LPAREN RPAREN 
-                  {: RESULT = Statement.functioncall(i); :};
+                  {: RESULT = Statement.functioncall(i); :}
+                |
+                ID:i LPAREN assignment_list:al RPAREN 
+                  {: 
+                  System.out.println("atleast reached here");
+                  for (Statement a : al.statementLists){
+                      if (!Tables.envTable.containsKey(a.ID)) {parser.sem_error(a.ID,"Function doesnot have this variable defined");}
+                      else
+                      { 
+                           System.out.println(a.ID);
+                           System.out.println(a.e);
+                           if(Type.equals(Tables.envTable.get(a.ID).getType(),a.e.getType())){
+                               RESULT = Statement.assignment(a.ID,a.e);
+                               System.out.println("got value from environment table");
+                               System.out.println(a.e.getType().getTypeName());
+                               System.out.println(a.e.getTypeValue().getValue().toString());
+                           }else{
+                               parser.type_error("e", " : expression in the assignment statement must have the type " + Tables.envTable.get(a.ID).getType().getTypeName());
+                           }
+                      }
+                  }
+                 RESULT = Statement.functioncall(i); :};
 
 while  ::= WHILE LPAREN expr:e RPAREN statement:s //while  ::= WHILE LPAREN expr:e RPAREN DO statement:s
                 {:if((Boolean)e.getType().isBool()){
@@ -345,6 +367,9 @@ assignment ::= ID:i EQ expr:e
                         parser.type_error(i2, " : function return type must be " + Tables.envTable.get(i1).getType().getTypeName());
                     }                                       
                   :};
+
+assignment_list ::= assignment_list:al COMMA assignment:a {: RESULT = new Lstatements(al, a); :} | 
+                    assignment:a {: RESULT = new Lstatements(a); :};
 
 expr      ::=    expr:e PLUS factor:f
                  {: 

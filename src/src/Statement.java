@@ -355,18 +355,24 @@ public class Statement
             }
         } else if (statementType.equals("print")) {
             //need to check type for casting from TypeValue
-            if (e.getType().isInteger()) {
-                System.out.println((Integer) e.getTypeValue().getValue());
+            if(e != null){
+                if (e.getType().isInteger()) {
+                    System.out.println((Integer) e.getTypeValue().getValue());
+                }
+                if (e.getType().isFloating_point()) {
+                    System.out.println((Float) e.getTypeValue().getValue());
+                }
+                if (e.getType().isString()) {
+                    System.out.println((String) e.getTypeValue().getValue());
+                }
+                if (e.getType().isBool()) {
+                    System.out.println((Boolean) e.getTypeValue().getValue());
+                }
             }
-            if (e.getType().isFloating_point()) {
-                System.out.println((Float) e.getTypeValue().getValue());
+            else{
+                System.out.println("HEre is the error");
             }
-            if (e.getType().isString()) {
-                System.out.println((String) e.getTypeValue().getValue());
-            }
-            if (e.getType().isBool()) {
-                System.out.println((Boolean) e.getTypeValue().getValue());
-            }
+            
 
         } else if (statementType.equals("list")) {
             for (Statement s : statementList.statementLists) {

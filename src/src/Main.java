@@ -182,7 +182,8 @@ public class Main extends javax.swing.JFrame {
             /* do cleanup here -- possibly rethrow e */
             e.printStackTrace();
         }
-        Tables.envTable.clear();  //clear env table for next compile
+        Tables.envTable.clear();
+        Tables.funcTable.clear();
     }//GEN-LAST:event_btnCompileActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed

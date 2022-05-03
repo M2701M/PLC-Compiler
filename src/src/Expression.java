@@ -74,23 +74,29 @@ public class Expression {
         }
 
         //System.out.println("IN X constructor");
-        if (Tables.envTable.get(x).getType().isInteger()) {
-            type = Type.integer();
-            isBool = false;
-            //System.out.println("ID test(integer): "+x+" "+type.isInteger());
-        } else if (Tables.envTable.get(x).getType().isFloating_point()) {
-            type = Type.floating_point();
-            isBool = false;
-        } else if (Tables.envTable.get(x).getType().isString()) {
-            type = Type.string();
-            isBool = false;
-        } else if (Tables.envTable.get(x).getType().isBool()) {
-            //System.out.println(x+" is boolean "+ Tables.envTable.get(x));
-            type = Type.bool();
-            isBool = true;
-        } else {
-            type = Type.errortype();
+        if(Tables.envTable.get(x) != null){
+            if (Tables.envTable.get(x).getType().isInteger()) {
+                type = Type.integer();
+                isBool = false;
+                //System.out.println("ID test(integer): "+x+" "+type.isInteger());
+            } else if (Tables.envTable.get(x).getType().isFloating_point()) {
+                type = Type.floating_point();
+                isBool = false;
+            } else if (Tables.envTable.get(x).getType().isString()) {
+                type = Type.string();
+                isBool = false;
+            } else if (Tables.envTable.get(x).getType().isBool()) {
+                //System.out.println(x+" is boolean "+ Tables.envTable.get(x));
+                type = Type.bool();
+                isBool = true;
+            } else {
+                type = Type.errortype();
+            }
         }
+        else{
+            System.out.println("ERROR!");
+        }
+        
 
         ID = x;
     }
